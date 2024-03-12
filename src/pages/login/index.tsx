@@ -8,7 +8,7 @@ import JsEncrypt from 'jsencrypt'
 import { md5 } from 'js-md5'
 import uuidv4 from 'uuid-random'
 import { fetchGet, fetchPostJson } from '../../utils/fetch'
-import { setToken } from '../../utils/token'
+import { setToken, setUserId } from '../../utils/token'
 import { useNavigate } from 'react-router-dom'
 
 export const Login = () => {
@@ -71,8 +71,8 @@ const LoginForm = () => {
     !password
       ? messageApi.error('请输入用户名')
       : !password
-      ? messageApi.error('请输入密码')
-      : (check = true)
+        ? messageApi.error('请输入密码')
+        : (check = true)
     return check
   }
 
@@ -81,29 +81,37 @@ const LoginForm = () => {
     if (!allowNext) return
     dispach(changeState(true))
     const cacheKey = getCacheKey()
-
-    const publicKey = await getPublicKey(cacheKey)
-    if (publicKey) {
-      const encryptPassword = rsaEncrypt(publicKey, password)
-      const userInfo = {
-        username,
-        password: encryptPassword,
-        cacheKey,
-      }
-      try {
+    try {
+      const publicKey = await getPublicKey(cacheKey)
+      if (publicKey) {
+        const encryptPassword = rsaEncrypt(publicKey, password)
+        const userInfo = {
+          username,
+          password: encryptPassword,
+          cacheKey,
+        }
         const loginResponse = await fetchPostJson('admin/user/login', userInfo)
-        const { data } = await loginResponse.json()
-        setToken(data)
+        const data = await loginResponse.json()
+        if (data.message) {
+          throw Error(data.message)
+        }
+        const token = data.data.token
+        setToken(token)
+        setUserId(username)
         navigate('/', {
           replace: true,
         })
-      } catch (e) {
-        messageApi.error('登陆失败')
-        setPassword('')
-      } finally {
-        dispach(changeState(false))
+
       }
+    } catch (e) {
+      console.log('捕获错误')
+      messageApi.error('登陆失败')
+      setPassword('')
+    } finally {
+      console.log('finally')
+      dispach(changeState(false))
     }
+
   }
 
   const usernameInsertHandler: ChangeEventHandler<HTMLInputElement> = (e) => {

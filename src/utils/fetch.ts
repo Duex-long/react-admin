@@ -1,19 +1,33 @@
 const BASE_URL = 'http://localhost:3000'
 import CryptoJS from 'crypto-js'
+import { getToken, getUserId } from './token'
 const SECRET_ID = 'AKIDz8krbsJ5yKBZQpn74WFkmLPx3*******'
 const SECRET_KEY = 'Gu5t9xGARNpq86cd98joQYCN3*******'
 
 
 
 
-const hash = (message: string) => {
+export const hash = (message: string) => {
     const hash = CryptoJS.SHA256(message)
+    return hash.toString(CryptoJS.enc['Hex'])
+}
+
+export const sha1 = (message: string) => {
+    const hash = CryptoJS.SHA1(message)
     return hash.toString(CryptoJS.enc['Hex'])
 }
 
 const sha256 = (message: string, secret = '', encoding?: keyof typeof CryptoJS.enc) => {
     const hash = CryptoJS.HmacSHA256(message, secret)
     return encoding ? hash.toString(CryptoJS.enc[encoding]) : hash
+}
+
+const getSecretId = () => {
+    return getUserId()
+}
+
+const getSecretKey = () => {
+    return getToken()
 }
 
 const service = 'cvm'
@@ -32,6 +46,9 @@ const getHashedCanonicalRequest = (options: { [x: string]: string }) => {
     return hash(result);
 }
 const getAuthorizationHeader = (method: string, options: { [x: string]: string }) => {
+    const secretId = getSecretId() || SECRET_ID
+    const secretKey = getSecretKey() || SECRET_KEY
+    console.log(secretId, secretKey)
     const { canonicalQueryString, hashedRequestPayload, timestamp } = options
     const host = 'localhost:3000'
     const canonicalHeaders = "content-type:application/json; charset=utf-8\n"
@@ -47,6 +64,7 @@ const getAuthorizationHeader = (method: string, options: { [x: string]: string }
         canonicalQueryString,
         hashedRequestPayload
     })
+
     const credentialScope = date + "/" + service + "/" + endString
 
     const stringToSign = algorithm + "\n" +
@@ -54,12 +72,12 @@ const getAuthorizationHeader = (method: string, options: { [x: string]: string }
         credentialScope + "\n" +
         hashedCanonicalRequest
 
-    const kDate = sha256(date as string, 'BASE' + SECRET_KEY)
+    const kDate = sha256(date as string, 'BASE' + secretKey)
     const kService = sha256(service, kDate as string)
     const kSigning = sha256(endString, kService as string)
     const signature = sha256(stringToSign, kSigning as string, 'Hex')
     const authorization = algorithm + " " +
-        "Credential=" + SECRET_ID + "/" + credentialScope + ", " +
+        "Credential=" + secretId + "/" + credentialScope + ", " +
         "SignedHeaders=" + signedHeaders + ", " +
         "Signature=" + signature
 
