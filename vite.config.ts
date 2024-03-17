@@ -15,4 +15,11 @@ export default defineConfig({
       '@common': Path.resolve(__dirname, 'src/common'),
     },
   },
+  css: {
+    preprocessorOptions: {
+      less: {
+        additionalData: '@import "@/assets/less/index.less";',
+      }
+    }
+  }
 })
