@@ -1,0 +1,11 @@
+.base-space(@property, @insert) {
+    @n:length(@insert);
+    each(range(length(@insert)),{
+        @current:extract(@insert,@value);
+        @{property}+_ : unit(@current * @base-spacing,px);
+    })
+}
+.full-page {
+    height: 100%;
+    width: 100%;
+}
