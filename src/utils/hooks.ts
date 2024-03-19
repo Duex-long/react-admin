@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { useLocation } from 'react-router-dom'
 
 const namespaceReg = /^\/([0-9a-zA-Z])+\//i
@@ -8,4 +9,10 @@ const useNameSpace = () => {
   return result ? result[0].replace(/\//g, '') : ''
 }
 
-export { useNameSpace }
+const useRootDocument = () => {
+  return useCallback(() => {
+    return document.getElementById('root') as HTMLElement
+  }, [])
+}
+
+export { useNameSpace, useRootDocument }

@@ -1,23 +1,25 @@
-import { Table, Pagination } from 'antd'
+import { Table } from 'antd'
 import './index.less'
-import { useNameSpace } from '@/utils/hooks'
-import { columns, mockData } from './table'
+import { columns, mockData } from './table-data'
 import { useState } from 'react'
+import { OptionHeader } from '@/common/table'
 
 const UserManagement = () => {
   const [loadingState, setLoadingState] = useState(false)
-  console.log(useNameSpace())
+  const submitInfo = (val: unknown) => {
+    console.log('接收', val)
+  }
   return (
     <>
       <div className="user">
+        <OptionHeader finshHandler={submitInfo} />
         <Table
-          pagination={false}
+          pagination={{ pageSize: 7 }}
           loading={loadingState}
           className="user-table"
           columns={columns}
           dataSource={mockData}
         />
-        <Pagination defaultCurrent={1} total={10} />
       </div>
     </>
   )
