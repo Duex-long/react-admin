@@ -4,6 +4,7 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import { Layout as LayoutAntd, Menu, Button, theme } from 'antd'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { roleRoutes } from '@/router/routes'
+import GlobalHeader from '../header'
 
 const { Header, Sider, Content } = LayoutAntd
 
@@ -31,14 +32,14 @@ const Layout: React.FC = () => {
           selectedKeys={selectedKeys}
           items={roleRoutes.map(({ parent, name, icon, path }) => ({
             key: parent + '/' + path,
-            label: name,
+            label: name.toLocaleUpperCase(),
             icon: <Link to={path}>{icon}</Link>,
           }))}
         />
       </Sider>
       <LayoutAntd>
         <Header style={{ padding: 0, background: colorBgContainer }}>
-          <Button
+          {/* <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={() => setCollapsed(!collapsed)}
@@ -47,7 +48,8 @@ const Layout: React.FC = () => {
               width: 64,
               height: 64,
             }}
-          />
+          /> */}
+          <GlobalHeader />
         </Header>
         <Content
           style={{

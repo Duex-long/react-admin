@@ -56,7 +56,6 @@ export const columns = [
   },
   {
     title: 'options',
-    key: 'options',
     render: ({ id }) => (
       <>
         <Space size="middle">
@@ -77,7 +76,7 @@ export const mockData: DataType[] = [
     roles: ['1', '2'],
   },
   {
-    key: '1',
+    key: '2',
     user: 'John Brown',
     create_time: 32,
     last_login_time: 0,
@@ -85,7 +84,7 @@ export const mockData: DataType[] = [
     roles: ['1', '2'],
   },
   {
-    key: '1',
+    key: '3',
     user: 'John Brown',
     create_time: 32,
     last_login_time: 0,
@@ -93,7 +92,7 @@ export const mockData: DataType[] = [
     roles: ['1', '2'],
   },
   {
-    key: '1',
+    key: '4',
     user: 'John Brown',
     create_time: 32,
     last_login_time: 0,
@@ -101,7 +100,7 @@ export const mockData: DataType[] = [
     roles: ['1', '2'],
   },
   {
-    key: '1',
+    key: '5',
     user: 'John Brown',
     create_time: 32,
     last_login_time: 0,
@@ -109,7 +108,7 @@ export const mockData: DataType[] = [
     roles: ['1', '2'],
   },
   {
-    key: '1',
+    key: '6',
     user: 'John Brown',
     create_time: 32,
     last_login_time: 0,
@@ -117,7 +116,7 @@ export const mockData: DataType[] = [
     roles: ['1', '2'],
   },
   {
-    key: '1',
+    key: '7',
     user: 'John Brown',
     create_time: 32,
     last_login_time: 0,

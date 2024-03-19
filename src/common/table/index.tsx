@@ -124,14 +124,14 @@ const DeleteButton = () => {
       <>
         <Space size="middle">
           <Button
-            type="link"
+            type="primary"
             size="small"
             danger
             children="确认"
             onClick={delHandler}
             loading={loadingState}
           />
-          <Button type="text" size="small" children="取消" onClick={hide} />
+          <Button type="dashed" size="small" children="取消" onClick={hide} />
         </Space>
       </>
     )

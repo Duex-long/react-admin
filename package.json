@@ -15,6 +15,7 @@
     "@types/crypto-js": "^4.2.2",
     "antd": "^5.14.0",
     "crypto-js": "^4.2.0",
+    "dayjs": "^1.11.10",
     "js-md5": "^0.8.3",
     "jsencrypt": "^3.3.2",
     "less": "^4.2.0",

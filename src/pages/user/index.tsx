@@ -14,6 +14,7 @@ const UserManagement = () => {
       <div className="user">
         <OptionHeader finshHandler={submitInfo} />
         <Table
+          bordered
           pagination={{ pageSize: 7 }}
           loading={loadingState}
           className="user-table"
