@@ -71,8 +71,8 @@ const LoginForm = () => {
     !password
       ? messageApi.error('请输入用户名')
       : !password
-        ? messageApi.error('请输入密码')
-        : (check = true)
+      ? messageApi.error('请输入密码')
+      : (check = true)
     return check
   }
 
@@ -85,6 +85,9 @@ const LoginForm = () => {
       const publicKey = await getPublicKey(cacheKey)
       if (publicKey) {
         const encryptPassword = rsaEncrypt(publicKey, password)
+        if (!encryptPassword) {
+          throw Error('加密错误')
+        }
         const userInfo = {
           username,
           password: encryptPassword,
@@ -101,17 +104,14 @@ const LoginForm = () => {
         navigate('/', {
           replace: true,
         })
-
       }
     } catch (e) {
       console.log('捕获错误')
       messageApi.error('登陆失败')
       setPassword('')
     } finally {
-      console.log('finally')
       dispach(changeState(false))
     }
-
   }
 
   const usernameInsertHandler: ChangeEventHandler<HTMLInputElement> = (e) => {

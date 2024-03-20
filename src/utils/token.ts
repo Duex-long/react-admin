@@ -10,8 +10,8 @@ export const setUserId = (username: string) => {
   sessionStorage.setItem(USER_KEY, sha1(username))
 }
 export const getToken = () => {
-  // return sessionStorage.getItem('token')
-  return true
+  return sessionStorage.getItem('token')
+  // return true
 }
 
 export const getUserId = () => {
@@ -19,4 +19,7 @@ export const getUserId = () => {
 }
 export const removeToken = () => {
   sessionStorage.removeItem('token')
+}
+export const removeUserId = () => {
+  sessionStorage.removeItem(USER_KEY)
 }

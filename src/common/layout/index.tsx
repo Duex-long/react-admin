@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import './layout.less'
-import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
-import { Layout as LayoutAntd, Menu, Button, theme } from 'antd'
+import { Layout as LayoutAntd, Menu, theme } from 'antd'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { roleRoutes } from '@/router/routes'
-import GlobalHeader from '../header'
+import { GlobalHeader, GlobalUserInfo } from '@/common/global/index'
 
 const { Header, Sider, Content } = LayoutAntd
 
 const Layout: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false)
+  const [collapsed] = useState(false)
   const [selectedKeys, setSelectedKeys] = useState<string[]>([])
   const location = useLocation()
 
@@ -25,7 +24,9 @@ const Layout: React.FC = () => {
   return (
     <LayoutAntd style={{ minHeight: '100vh' }}>
       <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="demo-logo-vertical" />
+        <div className="demo-logo-vertical">
+          <GlobalUserInfo />
+        </div>
         <Menu
           theme="dark"
           mode="inline"

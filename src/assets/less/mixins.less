@@ -5,6 +5,12 @@
         @{property}+_ : unit(@current * @base-spacing,px);
     })
 }
+
+.text-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: no-wrap;
+}
 .full-page {
     height: 100%;
     width: 100%;
@@ -13,6 +19,11 @@
 .flex-c-c {
     display: flex;
     justify-content: center;
+    align-items: center;
+}
+.flex-s-c {
+    display: flex;
+    justify-content: flex-start;
     align-items: center;
 }
 .flex-e-c {
