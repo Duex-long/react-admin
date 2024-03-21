@@ -23,3 +23,9 @@ export const removeToken = () => {
 export const removeUserId = () => {
   sessionStorage.removeItem(USER_KEY)
 }
+
+
+export const clearCache = () => {
+  removeToken()
+  removeUserId()
+}

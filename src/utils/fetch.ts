@@ -148,7 +148,7 @@ export const fetchGet = (url: string, params?: { [x: string]: unknown }) => {
   })
 }
 
-export const fetchPostJson = (url: string, body = null) => {
+export const fetchPostJson = (url: string, body: unknown = null) => {
   const timeheaders = {
     Timestamp: `${new Date().getTime()}`,
   }

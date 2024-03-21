@@ -1,48 +1,57 @@
-import { Table } from 'antd'
+import { Space, Table } from 'antd'
 import './index.less'
-import { columns, mockData } from './table-data'
-import { useEffect, useState } from 'react'
-import { OptionHeader } from '@/common/table'
-import { ListQueryType, getModuleList } from '@/api'
+import { columns } from './table-data'
+import { useState } from 'react'
+import { DeleteButton, DeleteState, OptionHeader } from '@/common/table'
+import { useListData, useTableOptions } from '@/utils/hooks'
 
 const UserManagement = () => {
-  const [loadingState, setLoadingState] = useState(false)
-  const [pageSize, setPageSize] = useState(6)
+  const pageSize = 5
   const [pageNum, setPageNum] = useState(1)
-  const [total, setTotal] = useState(0)
-  const [userList, setUserList] = useState([])
+  const {
+    list: userList,
+    listTotal,
+    loadingState,
+  } = useListData('user', pageNum, pageSize)
 
   const submitInfo = (val: unknown) => {
     console.log('接收', val)
   }
-  const getUserList = async (query: ListQueryType) => {
-    try {
-      setLoadingState(true)
-      const response = await getModuleList('user', query)
-      const result = await response.json()
-      const { total, record } = result.data
-      setTotal(total)
-      setUserList(record)
-      console.log(result, 'result')
-    } finally {
-      setLoadingState(false)
-    }
+
+  const deleteCallback = (e: DeleteState) => {
+    console.log('deleteCallback', e)
   }
 
-  useEffect(() => {
-    getUserList({ pageSize, pageNum })
-  }, [pageSize, pageNum])
+  const paginationChange = (num: number) => {
+    setPageNum(num)
+  }
+
+  const optionsRender = useTableOptions((record) => {
+    const { id } = record as { [x: string]: string }
+    return (
+      <Space size="middle">
+        <DeleteButton id={id} deleteCallback={deleteCallback} />
+      </Space>
+    )
+  })
+
   return (
     <>
       <div className="user">
         <OptionHeader finshHandler={submitInfo} />
         <Table
           bordered
-          pagination={{ pageSize, total, current: pageNum }}
+          pagination={{
+            pageSize,
+            total: listTotal.current,
+            current: pageNum,
+            onChange: paginationChange,
+          }}
           loading={loadingState}
           className="user-table"
-          columns={columns}
-          dataSource={mockData}
+          columns={[...columns, optionsRender]}
+          dataSource={userList}
+          rowKey="id"
         />
       </div>
     </>

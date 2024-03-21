@@ -1,122 +1,55 @@
-import { DeleteButton } from '@/common/table'
-import { Space, Tag } from 'antd'
+import { Tag } from 'antd'
+import dayjs from 'dayjs'
 
-interface DataType {
-  key: string
-  user: string
-  last_login_time: number
-  last_login_channel: string
-  create_time: number
-  roles: string[]
-}
+// interface DataType {
+//   key: string
+//   user: string
+//   last_login_time: number
+//   last_login_channel: string
+//   create_time: number
+//   roles: string[]
+// }
 
-const customColumnRender = (data: string[]) => {
+const customColumnRender = (data: string) => {
   return (
     <>
-      {data.map((item) => (
-        <Tag key={item} color="geekblue">
-          {item + 'custom'}
-        </Tag>
-      ))}
+      <Tag color="geekblue">{data}</Tag>
     </>
   )
 }
 
+const dateFormatRender = (data: string) => {
+  return <>{dayjs(data).format('YYYY-MM-DD HH:mm:ss')}</>
+}
+
 export const columns = [
   {
+    title: 'id',
+    dataIndex: 'id',
+    width: '20%',
+  },
+  {
     title: 'user',
-    dataIndex: 'user',
+    dataIndex: 'nickname',
     width: '20%',
   },
   {
     title: 'create_time',
     dataIndex: 'create_time',
     width: '20%',
+    render: dateFormatRender,
   },
   {
-    title: 'last_login_time',
-    dataIndex: 'last_login_time',
+    title: 'update_time',
+    dataIndex: 'update_time',
     width: '20%',
+    render: dateFormatRender,
   },
-  {
-    title: 'last_login_channel',
-    dataIndex: 'last_login_channel',
-    width: '20%',
-  },
+
   {
     title: 'roles',
-    dataIndex: 'roles',
+    dataIndex: 'auth',
     width: '20%',
     render: customColumnRender,
-  },
-  {
-    title: 'options',
-    key: 'options',
-    render: ({ id }) => (
-      <>
-        <Space size="middle">
-          <DeleteButton />
-        </Space>
-      </>
-    ),
-  },
-]
-
-export const mockData: DataType[] = [
-  {
-    key: '1',
-    user: 'John Brown',
-    create_time: 32,
-    last_login_time: 0,
-    last_login_channel: '1',
-    roles: ['1', '2'],
-  },
-  {
-    key: '2',
-    user: 'John Brown',
-    create_time: 32,
-    last_login_time: 0,
-    last_login_channel: '1',
-    roles: ['1', '2'],
-  },
-  {
-    key: '3',
-    user: 'John Brown',
-    create_time: 32,
-    last_login_time: 0,
-    last_login_channel: '1',
-    roles: ['1', '2'],
-  },
-  {
-    key: '4',
-    user: 'John Brown',
-    create_time: 32,
-    last_login_time: 0,
-    last_login_channel: '1',
-    roles: ['1', '2'],
-  },
-  {
-    key: '5',
-    user: 'John Brown',
-    create_time: 32,
-    last_login_time: 0,
-    last_login_channel: '1',
-    roles: ['1', '2'],
-  },
-  {
-    key: '6',
-    user: 'John Brown',
-    create_time: 32,
-    last_login_time: 0,
-    last_login_channel: '1',
-    roles: ['1', '2'],
-  },
-  {
-    key: '7',
-    user: 'John Brown',
-    create_time: 32,
-    last_login_time: 0,
-    last_login_channel: '1',
-    roles: ['1', '2'],
   },
 ]

@@ -1,14 +1,14 @@
-import { getRandomRGBA } from '../../utils/random'
+import { getRandomRGBA } from '@/utils/random'
 import { Button, Input, message } from 'antd'
 import './login.less'
 import { ChangeEventHandler, ReactNode, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { changeState } from '../../store/loading'
+import { changeState } from '@/store/loading'
 import JsEncrypt from 'jsencrypt'
 import { md5 } from 'js-md5'
 import uuidv4 from 'uuid-random'
-import { fetchGet, fetchPostJson } from '../../utils/fetch'
-import { setToken, setUserId } from '../../utils/token'
+import { fetchGet, fetchPostJson } from '@/utils/fetch'
+import { clearCache, setToken, setUserId } from '@/utils/token'
 import { useNavigate } from 'react-router-dom'
 
 export const Login = () => {
@@ -68,7 +68,7 @@ const LoginForm = () => {
 
   const checkFormIsEmpty = () => {
     let check = false
-    !password
+    !username
       ? messageApi.error('请输入用户名')
       : !password
       ? messageApi.error('请输入密码')
@@ -77,6 +77,7 @@ const LoginForm = () => {
   }
 
   const loginClick = async () => {
+    clearCache()
     const allowNext = checkFormIsEmpty()
     if (!allowNext) return
     dispach(changeState(true))

@@ -99,15 +99,20 @@ const OptionHeader = ({
     </>
   )
 }
+export type DeleteState = 'success' | 'fail'
+export type DeleteButtonProps = {
+  id: string
+  deleteCallback: (state: DeleteState) => void
+}
 
-const DeleteButton = () => {
+const DeleteButton = (props: DeleteButtonProps) => {
+  const { id, deleteCallback } = props
   const [open, setOpen] = useState(false)
   const [loadingState, setLoadingState] = useState(false)
 
   const hide = () => {
     setOpen(false)
   }
-
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen)
   }
@@ -115,9 +120,12 @@ const DeleteButton = () => {
   const PopverContentRender = () => {
     const delHandler = () => {
       setLoadingState(true)
+      // 模拟接口
       setTimeout(() => {
         setLoadingState(false)
         hide()
+        console.log('id', id)
+        deleteCallback('success')
       }, 500)
     }
     return (
@@ -136,6 +144,7 @@ const DeleteButton = () => {
       </>
     )
   }
+
   return (
     <>
       <Popover
