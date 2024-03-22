@@ -11,6 +11,7 @@ import {
   Space,
 } from 'antd'
 import { useRootDocument } from '@/utils/hooks'
+import { deleteModuleOneItem } from '@/api'
 const OptionHeader = ({
   finshHandler,
 }: {
@@ -102,11 +103,12 @@ const OptionHeader = ({
 export type DeleteState = 'success' | 'fail'
 export type DeleteButtonProps = {
   id: string
+  namespace: string
   deleteCallback: (state: DeleteState) => void
 }
 
 const DeleteButton = (props: DeleteButtonProps) => {
-  const { id, deleteCallback } = props
+  const { id, deleteCallback, namespace } = props
   const [open, setOpen] = useState(false)
   const [loadingState, setLoadingState] = useState(false)
 
@@ -118,15 +120,23 @@ const DeleteButton = (props: DeleteButtonProps) => {
   }
 
   const PopverContentRender = () => {
-    const delHandler = () => {
+    const delHandler = async () => {
+      if (loadingState) return
       setLoadingState(true)
       // 模拟接口
-      setTimeout(() => {
-        setLoadingState(false)
-        hide()
-        console.log('id', id)
+      try {
+        const res = await deleteModuleOneItem(namespace, { id })
+        const state = res.ok
+        if (!state) {
+          throw Error('删除失败')
+        }
         deleteCallback('success')
-      }, 500)
+        hide()
+      } catch {
+        deleteCallback('fail')
+      } finally {
+        setLoadingState(false)
+      }
     }
     return (
       <>

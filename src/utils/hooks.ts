@@ -27,47 +27,51 @@ const useTableOptions = (renderFunc: (...args: unknown[]) => JSX.Element) => {
 const useListData = (namespace: string, pageNum: number, size: number = 5) => {
   const pageSize = size
   const listTotal = useRef(NaN)
-  const listLength = useRef(0)
+  // const listLength = useRef(0)
   const [list, setList] = useState([])
   const [loadingState, setLoadingState] = useState(false)
-  useEffect(() => {
-    const checkRepeatRequest = () => {
-      if (isNaN(listTotal.current)) return false
-      if (listLength.current == listTotal.current) return true
-    }
 
-    const getList = async () => {
-      if (checkRepeatRequest()) return
-      try {
-        setLoadingState(true)
-        const response = await getModuleList(namespace, {
-          pageNum,
-          pageSize,
-        })
-        const result = await response.json()
-        const { total, records } = result.data
-        listTotal.current = total
-        setList((userList: typeof records) => {
-          const list = userList.concat([])
-          const start = (pageNum - 1) * pageSize
-          const len = records.length
-          for (let i = 0; i < len; i++) {
-            list[i + start] = records[i]
-          }
-          listLength.current = list.length
-          return list.filter((item: unknown) => item)
-        })
-      } finally {
-        setLoadingState(false)
-      }
-    }
+  const getList = useCallback(async () => {
+    // const checkRepeatRequest = () => {
+    //   if (isNaN(listTotal.current)) return false
+    //   if (listLength.current == listTotal.current) return true
+    // }
+    // if (checkRepeatRequest()) return
+    // setList((userList: typeof records) => {
+    //   const list = userList.concat([])
+    //   const start = (pageNum - 1) * pageSize
+    //   const len = records.length
+    //   for (let i = 0; i < len; i++) {
+    //     list[i + start] = records[i]
+    //   }
+    //   listLength.current = list.length
+    //   return list.filter((item: unknown) => item)
+    //   return records
+    // })
+    try {
+      setLoadingState(true)
+      const response = await getModuleList(namespace, {
+        pageNum,
+        pageSize,
+      })
+      const result = await response.json()
+      const { total, records } = result.data
+      listTotal.current = total
 
-    getList()
+      setList(records)
+    } finally {
+      setLoadingState(false)
+    }
   }, [namespace, pageNum, pageSize])
+
+  useEffect(() => {
+    getList()
+  }, [getList])
 
   return {
     list,
     listTotal,
+    getList,
     loadingState,
   }
 }

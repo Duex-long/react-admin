@@ -12,6 +12,7 @@ const UserManagement = () => {
     list: userList,
     listTotal,
     loadingState,
+    getList: getUserList,
   } = useListData('user', pageNum, pageSize)
 
   const submitInfo = (val: unknown) => {
@@ -20,9 +21,16 @@ const UserManagement = () => {
 
   const deleteCallback = (e: DeleteState) => {
     console.log('deleteCallback', e)
+    // 判断
+    if (listTotal.current % pageSize == 1 && pageNum > 1) {
+      setPageNum((oldValue) => oldValue--)
+    } else {
+      getUserList()
+    }
   }
 
   const paginationChange = (num: number) => {
+    console.log('paginationChange')
     setPageNum(num)
   }
 
@@ -30,7 +38,11 @@ const UserManagement = () => {
     const { id } = record as { [x: string]: string }
     return (
       <Space size="middle">
-        <DeleteButton id={id} deleteCallback={deleteCallback} />
+        <DeleteButton
+          namespace="user"
+          id={id}
+          deleteCallback={deleteCallback}
+        />
       </Space>
     )
   })
