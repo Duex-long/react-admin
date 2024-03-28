@@ -1,8 +1,10 @@
-import { createBrowserRouter } from 'react-router-dom'
-import { routes } from './common'
-import { roleRoutes } from './routes'
+import { RouteObject, createBrowserRouter } from 'react-router-dom'
+import { getBaseRoutes } from './common'
 
-const generateRouterList = () => {
+const generateRouterList = (
+  routes: RouteObject[],
+  roleRoutes: RouteObject[]
+) => {
   const dasboardIdx = routes.findIndex((r) =>
     r.path ? /dashboard$/i.test(r.path) : false
   )
@@ -10,8 +12,13 @@ const generateRouterList = () => {
     routes[dasboardIdx].children?.splice(-1, 0, ...roleRoutes)
   }
 }
-generateRouterList()
 
-const router = createBrowserRouter(routes)
+const generateRouter = (roleRoutes: RouteObject[]) => {
+  const baseRoute = getBaseRoutes()
+  generateRouterList(baseRoute, roleRoutes)
+  return createBrowserRouter(baseRoute)
+}
 
-export { router }
+//
+
+export { generateRouter }

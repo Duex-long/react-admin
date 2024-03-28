@@ -5,8 +5,7 @@ import { useState } from 'react'
 import { DeleteButton, DeleteState, OptionHeader } from '@/common/table'
 import { useListData, useTableOptions } from '@/utils/hooks'
 
-const UserManagement = () => {
-  const namespace = 'user'
+const CommonManagement = ({ namespace }: { namespace: string }) => {
   const pageSize = 5
   const [pageNum, setPageNum] = useState(1)
   const {
@@ -71,8 +70,4 @@ const UserManagement = () => {
   )
 }
 
-
-
-
-
-export default UserManagement
+export default CommonManagement

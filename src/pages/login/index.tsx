@@ -58,12 +58,34 @@ const rsaEncrypt = (publicKey: string, target: string) => {
   return result || ''
 }
 
+const userLogin = async (username: string, password: string) => {
+  clearCache()
+  const cacheKey = getCacheKey()
+  const publicKey = await getPublicKey(cacheKey)
+  if (publicKey) {
+    const encryptPassword = rsaEncrypt(publicKey, password)
+    if (!encryptPassword) {
+      throw Error('加密错误')
+    }
+    const userInfo = {
+      username,
+      password: encryptPassword,
+      cacheKey,
+    }
+    const loginResponse = await fetchPostJson('admin/user/login', userInfo)
+    const data = await loginResponse.json()
+    if (data.message) {
+      throw Error(data.message)
+    }
+    return data.data
+  }
+}
+
 const LoginForm = () => {
   const dispach = useDispatch()
-
+  const navigate = useNavigate()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const navigate = useNavigate()
   const [messageApi, contextHolder] = message.useMessage()
 
   const checkFormIsEmpty = () => {
@@ -77,40 +99,20 @@ const LoginForm = () => {
   }
 
   const loginClick = async () => {
-    clearCache()
     const allowNext = checkFormIsEmpty()
     if (!allowNext) return
     dispach(changeState(true))
-    const cacheKey = getCacheKey()
     try {
-      const publicKey = await getPublicKey(cacheKey)
-      if (publicKey) {
-        const encryptPassword = rsaEncrypt(publicKey, password)
-        if (!encryptPassword) {
-          throw Error('加密错误')
-        }
-        const userInfo = {
-          username,
-          password: encryptPassword,
-          cacheKey,
-        }
-        const loginResponse = await fetchPostJson('admin/user/login', userInfo)
-        const data = await loginResponse.json()
-        if (data.message) {
-          throw Error(data.message)
-        }
-        const token = data.data.token
-        setToken(token)
-        setUserId(username)
-        navigate('/', {
-          replace: true,
-        })
-      }
+      const data = await userLogin(username, password)
+      setToken(data.token)
+      setUserId(username)
+      navigate('/', {
+        replace: true,
+      })
     } catch (e) {
-      console.log('捕获错误')
       messageApi.error('登陆失败')
-      setPassword('')
     } finally {
+      setPassword('')
       dispach(changeState(false))
     }
   }
